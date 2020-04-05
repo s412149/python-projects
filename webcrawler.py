@@ -8,7 +8,8 @@ Created on Wed Apr  1 17:13:32 2020
 import urllib.request
 from bs4 import BeautifulSoup
 import urllib.parse
-from datetime import datetime
+#from datetime import datetime
+from multiprocessing import Pool
 
 def main():
     print('Getting staff urls...')
@@ -28,15 +29,25 @@ def main():
             urls.append(encoded_url)
             
     print('Staff emails found:')
-    for url in urls:
-        print(get_details(url))
     
+    if __name__ == '__main__':
+        mypool = Pool()
+        mypool.map(print_details(url), urls)
+
+def fix_encoding(url):
+    components = urllib.parse.urlsplit(url)
+    components = list(components)
+    components[2] = urllib.parse.quote(components[2])
+    return urllib.parse.urlunsplit(components)    
   
 def get_content(url):
     response = urllib.request.urlopen(url)
     data = response.read()
     doc = BeautifulSoup(data, 'html.parser')
     return doc.find(id='tresc_wlasciwa')   
+
+def print_details(url):
+    print(get_details(url))
 
 def get_details(url):
     try:
@@ -50,16 +61,8 @@ def get_details(url):
         if link.has_attr('href') and link['href'].startswith('mailto:'):
             email = link.get_text()
             return header.get_text() + ':' + email
-    return header.get_text() + '(no emaill found)'
+    return header.get_text() + '(no email found)'
 
-def fix_encoding(url):
-    components = urllib.parse.urlsplit(url)
-    components = list(components)
-    components[2] = urllib.parse.quote(components[2])
-    return urllib.parse.urlunsplit(components)
-    
-start = datetime.now().timestamp()
+
+
 main()
-end = datetime.now().timestamp()
-duration = end - start
-print("Processing time = " + str(duration))
