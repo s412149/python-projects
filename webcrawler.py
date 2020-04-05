@@ -23,7 +23,8 @@ def main():
         if len(link.get_text()) > 1:
             base_url = 'http://wa.amu.edu.pl'
             url = urllib.parse.urljoin(base_url, link['href'])
-            urls.append(url)
+            encoded_url = fix_encoding(url)
+            urls.append(encoded_url)
             
     print('Staff emails found:')
     for url in urls:
@@ -50,5 +51,11 @@ def get_details(url):
             return header.get_text() + ':' + email
     return header.get_text() + '(no emaill found)'
 
-     
+def fix_encoding(url):
+    components = urllib.parse.urlsplit(url)
+    components = list(components)
+    components[2] = urllib.parse.quote(components[2])
+    return urllib.parse.urlunsplit(components)
+    
+
 main()
