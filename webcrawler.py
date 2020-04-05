@@ -8,6 +8,7 @@ Created on Wed Apr  1 17:13:32 2020
 import urllib.request
 from bs4 import BeautifulSoup
 import urllib.parse
+from datetime import datetime
 
 def main():
     print('Getting staff urls...')
@@ -57,5 +58,8 @@ def fix_encoding(url):
     components[2] = urllib.parse.quote(components[2])
     return urllib.parse.urlunsplit(components)
     
-
+start = datetime.now().timestamp()
 main()
+end = datetime.now().timestamp()
+duration = end - start
+print("Processing time = " + str(duration))
