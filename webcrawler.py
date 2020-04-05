@@ -29,8 +29,6 @@ def main():
     for url in urls:
         print(get_details(url))
     
-    print('URLs found:')
-    print('\n'.join(urls))
   
 def get_content(url):
     response = urllib.request.urlopen(url)
