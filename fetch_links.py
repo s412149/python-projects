@@ -14,11 +14,14 @@ response = urllib.request.urlopen(url)
 data = response.read()
 doc = BeautifulSoup(data, 'html.parser')
 
-li = doc.select('ol > li')
-i = 1
-for link in li:
-    print(str(i) +'. ' + link.get_text())
-    i += 1
+lists = doc.find_all('ol')
+for li in lists:
+    i = 1
+    list_items = li.find_all('li')
+    print('\n')
+    for l in list_items:
+        print(str(i) +'. ' + l.get_text())
+        i += 1
 
 
 
